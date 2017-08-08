@@ -1,0 +1,16 @@
+<html>
+<body>
+<form action="#" th:action="@{/addTopic}" th:object="${topicForm}" method="post">
+    <table>
+        <tr>
+            <td>Topic description:</td>
+            <td><input type="text" th:field="*{description}" /></td>
+            <td th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</td>
+        </tr>
+        <tr>
+            <td><button type="submit">Submit</button></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
