@@ -1,5 +1,6 @@
 package iks.gog.jpatst.controller;
 
+import iks.gog.jpatst.forms.MessageForm;
 import iks.gog.jpatst.forms.TopicForm;
 import iks.gog.jpatst.model.Topic;
 import iks.gog.jpatst.service.TopicService;
@@ -20,6 +21,8 @@ public class WebController extends WebMvcConfigurerAdapter {
     private TopicService topicService;
     @Autowired
     private TopicForm topicForm;
+    @Autowired
+    private MessageForm messageForm;
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
@@ -29,7 +32,7 @@ public class WebController extends WebMvcConfigurerAdapter {
     @GetMapping("/")
     public String showForum(Model model) {
         System.out.println("mapping \" / \" ");
-        model.addAttribute("allTopics", topicService.getTopics());
+        model.addAttribute("allTopics", topicService.getTopicsOrdered());
         model.addAttribute("topicForm", topicForm);
         return "forum";
     }
@@ -39,6 +42,9 @@ public class WebController extends WebMvcConfigurerAdapter {
 
         Topic topic = topicService.findTopicById(id);
         model.addAttribute("currentTopic", topic);
+
+        messageForm.setTopicId(id);
+        model.addAttribute("messageForm", messageForm);
         return "topic";
     }
 
@@ -57,6 +63,19 @@ public class WebController extends WebMvcConfigurerAdapter {
         topicService.addTopic(topicForm.getDescription());
         return "redirect:/";
     }
+
+    @PostMapping("/addMessage")
+    public String checkMessageData(@Valid MessageForm messageForm, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "redirect:/";
+        }
+
+        System.out.println("id: " + messageForm.getTopicId() + " text: " + messageForm.getDescription());
+
+        return "redirect:/";
+    }
+
 
 
 }

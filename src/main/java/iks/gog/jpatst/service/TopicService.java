@@ -28,4 +28,8 @@ public class TopicService {
         return topicRepository.findOne(id);
     }
 
+    public Iterable<Topic> getTopicsOrdered(){
+        return topicRepository.findAllOrdered();
+    }
+
 }
