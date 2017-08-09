@@ -56,6 +56,7 @@ public class UserController {
             model.addAttribute("message", "Logged out successfully.");
         }
 
+        
         return "login";
     }
 
