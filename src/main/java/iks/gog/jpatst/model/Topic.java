@@ -6,11 +6,11 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "topic")
+@Table(name = "topics")
 public class Topic {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "description")

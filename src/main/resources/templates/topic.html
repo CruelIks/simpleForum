@@ -29,7 +29,7 @@
 
     <div class="form-group">
         <label for="comment">Add new message: </label>
-        <input type="text" th:field="*{topicId}" />
+        <input type="hidden" th:field="*{topicId}" />
         <textarea th:field="*{description}" class="form-control" rows="5" id="message"></textarea>
         <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error></p>
         <div class="modal-footer">
