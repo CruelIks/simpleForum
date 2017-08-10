@@ -21,6 +21,7 @@
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
 
+        <a href="/register">Create account</a>
         <ul th:if="${#fields.hasErrors('*')}">
             <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
         </ul>
