@@ -4,6 +4,7 @@ import iks.gog.jpatst.forms.UserCreateForm;
 import iks.gog.jpatst.model.User;
 import iks.gog.jpatst.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -45,7 +46,10 @@ public class UserServiceImpl implements UserService {
     public User create(UserCreateForm form) {
         User user = new User();
         user.setName(form.getName());
-        user.setPassword(form.getPassword());
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user.setPassword(passwordEncoder.encode(form.getPassword()));
+        
         user.setRole(form.getRole());
         return userRepository.save(user);
     }
