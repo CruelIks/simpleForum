@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>Simple forum</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css"
+          href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"/>
+</head>
 <body>
-<form action="#" th:action="@{/register}" th:object="${userCreateForm}" method="post">
-    <table>
-        <tr>
-            <td>Name:</td>
-            <td><input type="text" th:field="*{name}" /></td>
-            <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</td>
-        </tr>
-        <tr>
-            <td>Password:</td>
-            <td><input type="text" th:field="*{password}" /></td>
-            <td th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</td>
-        </tr>
-        <tr>
-            <td>Confirm password:</td>
-            <td><input type="text" th:field="*{confirmPassword}" /></td>
-            <td th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">Confirm password Error</td>
-        </tr>
-        <tr>
-            <td><button type="submit">Submit</button></td>
-        </tr>
-    </table>
-</form>
+
+<div class="container">
+
+    <form class="form-signin" action="#" th:action="@{/register}" th:object="${form}" method="post">
+        <h2 class="form-signin-heading">Register</h2>
+        <label for="inputName" class="sr-only">Name</label>
+        <input type="text" th:field="*{name}" id="inputName" class="form-control" placeholder="User name"/>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" th:field="*{password}" id="inputPassword" class="form-control" placeholder="Password"/>
+        <label for="inputConfirmPassword" class="sr-only">Confirm password</label>
+        <input type="password" th:field="*{confirmPassword}" id="inputConfirmPassword" class="form-control" placeholder="Confirm password"/>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+
+        <ul th:if="${#fields.hasErrors('*')}">
+            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+        </ul>
+
+    </form>
+
+</div>
+
 </body>
 </html>

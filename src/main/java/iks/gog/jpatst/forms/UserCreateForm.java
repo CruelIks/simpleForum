@@ -2,9 +2,11 @@ package iks.gog.jpatst.forms;
 
 import iks.gog.jpatst.model.Role;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
 
+@Component
 public class UserCreateForm {
     @NotEmpty
     private String name = "";
