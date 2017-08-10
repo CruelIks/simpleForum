@@ -1,7 +1,12 @@
 package iks.gog.jpatst.forms;
 
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class LoginForm {
-    private String name;
-    private String password;
+    @NotEmpty
+    private String name = "";
+
+    @NotEmpty
+    private String password = "";
 }
