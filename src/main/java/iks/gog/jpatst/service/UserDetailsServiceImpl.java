@@ -34,8 +34,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(), grantedAuthorities);
     }
 
-    @Bean
+    /*@Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
+    }*/
 }

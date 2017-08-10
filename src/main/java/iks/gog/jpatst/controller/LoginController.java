@@ -34,12 +34,13 @@ public class LoginController {
     }
 */
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    //@RequestMapping(value = "/login", method = RequestMethod.GET)
+    @RequestMapping(value = "/login")
     public ModelAndView getUserLoginPage() {
         return new ModelAndView("login", "form", new LoginForm());
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/login", method = RequestMethod.POST)
     public String handleUserLoginPage(@Valid @ModelAttribute("form") LoginForm form, BindingResult bindingResult) {
 
        if (bindingResult.hasErrors()) {
@@ -48,5 +49,5 @@ public class LoginController {
 
 
         return "redirect:/";
-    }
+    }*/
 }

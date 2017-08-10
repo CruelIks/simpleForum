@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title>Simple forum</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -22,11 +22,14 @@
                 <li></li>
                 <li ><a href="/login">Sign in</a></li>
                 <li ><a href="/logout">Logout</a></li>
-                >
+
+
             </ul>
         </div>
     </div>
 </nav>
+
+Logged user: <span sec:authentication="name">Bob</span>
 
 <div class="container">
 
