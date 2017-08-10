@@ -1,16 +1,15 @@
 package iks.gog.jpatst.controller;
 
-import iks.gog.jpatst.model.User;
-import iks.gog.jpatst.service.SecurityService;
+import iks.gog.jpatst.forms.UserCreateForm;
 import iks.gog.jpatst.service.UserService;
-import iks.gog.jpatst.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.validation.Valid;
 
 @Controller
 public class UserController {
@@ -18,46 +17,30 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private SecurityService securityService;
+    /*@Autowired
+    private UserCreateFormValidator userCreateFormValidator;*/
 
-    @Autowired
-    private UserValidator userValidator;
+    /*@InitBinder("form")
+    public void initBinder(WebDataBinder binder) {
+        binder.addValidators(userCreateFormValidator);
+    }*/
 
-    @RequestMapping(value = "/registration", method = RequestMethod.GET)
-    public String registration(Model model) {
-        model.addAttribute("userForm", new User());
-
-        return "registration";
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public String getUserCreatePage(UserCreateForm userCreateForm){
+        return "register";
     }
 
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
-        userValidator.validate(userForm, bindingResult);
-
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String handleUserCreateForm(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "registration";
+            return "register";
         }
-
-        userService.save(userForm);
-
-        securityService.autoLogin(userForm.getName(), userForm.getConfirmPassword());
-
-        return "redirect:/welcome";
+        try {
+            userService.create(userCreateForm);
+        } catch (DataIntegrityViolationException e) {
+            bindingResult.reject("name.exists", "Name already exists");
+            return "register";
+        }
+        return "redirect:/";
     }
-
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(Model model, String error, String logout) {
-        if (error != null) {
-            model.addAttribute("error", "Username or password is incorrect.");
-        }
-
-        if (logout != null) {
-            model.addAttribute("message", "Logged out successfully.");
-        }
-
-        
-        return "login";
-    }
-
 }

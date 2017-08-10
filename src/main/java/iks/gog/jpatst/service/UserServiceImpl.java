@@ -1,40 +1,45 @@
 package iks.gog.jpatst.service;
 
-import iks.gog.jpatst.model.Role;
+import iks.gog.jpatst.forms.UserCreateForm;
 import iks.gog.jpatst.model.User;
-import iks.gog.jpatst.repository.RoleRepository;
 import iks.gog.jpatst.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
-
-/*
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-*/
 
     @Override
     public void save(User user) {
-        //user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        Set<Role> roles = new HashSet<>();
-        roles.add(roleRepository.findOne(1L));
-        user.setRoles(roles);
         userRepository.save(user);
     }
 
     @Override
     public User findByName(String name) {
         return userRepository.findByName(name);
+    }
+
+    @Override
+    public User findById(long id) {
+        return userRepository.findOne(id);
+    }
+
+    @Override
+    public Collection<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public User create(UserCreateForm form) {
+        User user = new User();
+        user.setName(form.getName());
+        user.setPassword(form.getPassword());
+        user.setRole(form.getRole());
+        return userRepository.save(user);
     }
 }

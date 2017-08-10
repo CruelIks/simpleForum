@@ -31,7 +31,6 @@ public class WebController extends WebMvcConfigurerAdapter {
 
     @GetMapping("/")
     public String showForum(Model model) {
-        System.out.println("mapping \" / \" ");
         model.addAttribute("allTopics", topicService.getTopicsOrdered());
         model.addAttribute("topicForm", topicForm);
         return "forum";

@@ -1,6 +1,5 @@
 package iks.gog.jpatst.service;
 
-import iks.gog.jpatst.model.Role;
 import iks.gog.jpatst.model.User;
 import iks.gog.jpatst.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByName(username);
 
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        for (Role role : user.getRoles()){
-            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
-        }
+        grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
         return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(), grantedAuthorities);
     }
 }
