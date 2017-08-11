@@ -23,6 +23,10 @@ public class Topic {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "topic", cascade = CascadeType.ALL)
     private List<Message> messages = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     public Long getId() {
         return id;
     }
@@ -45,6 +49,22 @@ public class Topic {
 
     public void setCreatedWhen(Date createdWhen) {
         this.createdWhen = createdWhen;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
     }
 
     @Override

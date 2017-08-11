@@ -16,11 +16,15 @@ public class Message {
 
     @Column(name = "created_when")
     @Temporal(value = TemporalType.TIMESTAMP)
-    private Date created_when;
+    private Date createdWhen;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     public Long getId() {
         return id;
@@ -38,12 +42,12 @@ public class Message {
         this.textMessage = textMessage;
     }
 
-    public Date getCreated_when() {
-        return created_when;
+    public Date getCreatedWhen() {
+        return createdWhen;
     }
 
-    public void setCreated_when(Date created_when) {
-        this.created_when = created_when;
+    public void setCreatedWhen(Date createdWhen) {
+        this.createdWhen = createdWhen;
     }
 
     public Topic getTopic() {
@@ -59,8 +63,18 @@ public class Message {
         return "Message{" +
                 "id=" + id +
                 ", textMessage='" + textMessage + '\'' +
-                ", created_when=" + created_when +
+                ", createdWhen=" + createdWhen +
                 ", topic=" + topic +
+                ", user=" + user +
                 '}';
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 }

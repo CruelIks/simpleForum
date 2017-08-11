@@ -23,21 +23,40 @@
     </div>
 </nav>
 
-<h2 th:text="${currentTopic.description}"></h2>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8 blog-main">
 
-<form action="#" th:action="@{/addMessage}" th:object="${messageForm}" method="post">
+            <h3 th:text="${currentTopic.description}"></h3>
 
-    <div class="form-group">
-        <label for="comment">Add new message: </label>
-        <input type="hidden" th:field="*{topicId}" />
-        <textarea th:field="*{description}" class="form-control" rows="5" id="message"></textarea>
-        <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error></p>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-success">Save</button>
+            <div th:each="message: ${currentTopic.messages}">
+
+                <span th:text="${message.user == null ? '' : message.user.name}"></span>
+                <span> wrote at </span>
+                <span th:text="${message.createdWhen == null ? '' : message.createdWhen}"></span>
+                <p th:text="${message.textMessage}"></p>
+            </div>
+
+
+            <form action="#" th:action="@{/addMessage}" th:object="${messageForm}" method="post">
+
+                <div class="form-group">
+                    <label for="comment">Add new message: </label>
+                    <input type="hidden" th:field="*{topicId}"/>
+                    <textarea th:field="*{description}" class="form-control" rows="5" id="message"></textarea>
+                    <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error></p>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </div>
+                </div>
+
+            </form>
+
         </div>
     </div>
+</div>
 
-</form>
+
 </body>
 </html>

@@ -3,8 +3,12 @@ package iks.gog.jpatst.controller;
 import iks.gog.jpatst.forms.MessageForm;
 import iks.gog.jpatst.forms.TopicForm;
 import iks.gog.jpatst.model.Topic;
+import iks.gog.jpatst.service.MessageService;
 import iks.gog.jpatst.service.TopicService;
+import iks.gog.jpatst.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +24,10 @@ public class WebController extends WebMvcConfigurerAdapter {
     @Autowired
     private TopicService topicService;
     @Autowired
+    private UserService userService;
+    @Autowired
+    private MessageService messageService;
+    @Autowired
     private TopicForm topicForm;
     @Autowired
     private MessageForm messageForm;
@@ -33,6 +41,7 @@ public class WebController extends WebMvcConfigurerAdapter {
     public String showForum(Model model) {
         model.addAttribute("allTopics", topicService.getTopicsOrdered());
         model.addAttribute("topicForm", topicForm);
+        model.addAttribute("username", userService.getCurrentUser().getName());
         return "forum";
     }
 
@@ -59,7 +68,7 @@ public class WebController extends WebMvcConfigurerAdapter {
             return "addTopic";
         }
 
-        topicService.addTopic(topicForm.getDescription());
+        topicService.addTopic(topicForm);
         return "redirect:/";
     }
 
@@ -70,7 +79,7 @@ public class WebController extends WebMvcConfigurerAdapter {
             return "redirect:/";
         }
 
-        System.out.println("id: " + messageForm.getTopicId() + " text: " + messageForm.getDescription());
+        messageService.addMessage(messageForm);
 
         return "redirect:/";
     }
