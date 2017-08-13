@@ -20,6 +20,10 @@ public class Topic {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date createdWhen;
 
+    @Column(name = "updated_when")
+    @Temporal(value = TemporalType.TIMESTAMP)
+    private Date updatedWhen;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "topic", cascade = CascadeType.ALL)
     private List<Message> messages = new ArrayList<>();
 
@@ -67,12 +71,23 @@ public class Topic {
         return messages;
     }
 
+    public Date getUpdatedWhen() {
+        return updatedWhen;
+    }
+
+    public void setUpdatedWhen(Date updatedWhen) {
+        this.updatedWhen = updatedWhen;
+    }
+
     @Override
     public String toString() {
         return "Topic{" +
                 "id=" + id +
                 ", description='" + description + '\'' +
                 ", createdWhen=" + createdWhen +
+                ", updatedWhenWhen=" + updatedWhen +
+                ", messages=" + messages +
+                ", user=" + user +
                 '}';
     }
 }

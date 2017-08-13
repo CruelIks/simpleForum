@@ -2,8 +2,12 @@ package iks.gog.jpatst.service;
 
 import iks.gog.jpatst.forms.MessageForm;
 import iks.gog.jpatst.model.Message;
+import iks.gog.jpatst.model.Topic;
 import iks.gog.jpatst.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -22,14 +26,24 @@ public class MessageService {
 
         Message message = new Message();
         message.setTextMessage(form.getDescription());
-        message.setCreatedWhen(new Date());
+        Date currentDate = new Date();
+        message.setCreatedWhen(currentDate);
 
-        message.setTopic(topicService.findTopicById(form.getTopicId()));
+        Topic topic = topicService.findTopicById(form.getTopicId());
+        message.setTopic(topic);
         message.setUser(userService.getCurrentUser());
 
+        topic.setUpdatedWhen(currentDate);
         messageRepository.save(message);
+        topicService.saveTopic(topic);
 
     }
 
+    public Page<Message> findByTopicId(Long topicId, int page, int size){
+        Sort sort = new Sort(Sort.Direction.DESC,  "createdWhen");
+
+        PageRequest request = new PageRequest(page, size, sort);
+        return messageRepository.findBytopic_id(topicId, request);
+    }
 
 }

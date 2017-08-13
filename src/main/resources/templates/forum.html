@@ -34,7 +34,8 @@
             <th>Id</th>
             <th>Description</th>
             <th>User</th>
-            <th>Date</th>
+            <th>Created</th>
+            <th>Updated</th>
         </tr>
         </thead>
         <tbody>
@@ -42,11 +43,18 @@
             <td th:text="${topic.id}"></td>
             <td><a th:href = "@{/topic(id=${topic.id})}" th:text="${topic.description}">  </a></td>
             <td th:text="${topic.user == null ? '' : topic.user.name}"/>
-            <td th:text="${topic.createdWhen}"></td>
+            <td th:text="${#dates.format(topic.createdWhen, 'dd/MMM/yyyy HH:mm')}"></td>
+            <td th:text="${#dates.format(topic.updatedWhen, 'dd/MMM/yyyy HH:mm')}"></td>
         </tr>
 
         </tbody>
     </table>
+
+    <nav aria-label="Page navigation example">
+        <ul th:each="i : ${#numbers.sequence( 1, allTopics.totalPages)}" class="pagination" >
+            <li th:class="${allTopics.number+1 eq i}?'page-item active':'page-item'"><a class="page-link" th:href="@{/(page=${i-1}, size=${allTopics.size})}" th:text="${i}"></a></li>
+        </ul>
+    </nav>
 
 
 </div>

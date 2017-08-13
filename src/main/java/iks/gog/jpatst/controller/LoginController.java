@@ -10,10 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -24,30 +21,16 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
-/*
-    @Autowired
-    private UserCreateFormValidator userCreateFormValidator;
-
-    @InitBinder("form")
-    public void initBinder(WebDataBinder binder) {
-        binder.addValidators(userCreateFormValidator);
-    }
-*/
 
     //@RequestMapping(value = "/login", method = RequestMethod.GET)
     @RequestMapping(value = "/login")
-    public ModelAndView getUserLoginPage() {
-        return new ModelAndView("login", "form", new LoginForm());
+    public ModelAndView getUserLoginPage(@RequestParam(name = "error", defaultValue = "false", required = false) String error) {
+        ModelAndView model = new ModelAndView("login", "form", new LoginForm());
+        if (error.equals("true")) {
+            model.addObject("error", true);
+        }
+        return model;
     }
 
-    /*@RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String handleUserLoginPage(@Valid @ModelAttribute("form") LoginForm form, BindingResult bindingResult) {
 
-       if (bindingResult.hasErrors()) {
-            return "register";
-        }
-
-
-        return "redirect:/";
-    }*/
 }

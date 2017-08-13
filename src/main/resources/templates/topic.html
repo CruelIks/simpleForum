@@ -29,7 +29,15 @@
 
             <h3 th:text="${currentTopic.description}"></h3>
 
-            <div th:each="message: ${currentTopic.messages}">
+ <!--           <div th:each="message: ${currentTopic.messages}">
+
+                <span th:text="${message.user == null ? '' : message.user.name}"></span>
+                <span> wrote at </span>
+                <span th:text="${message.createdWhen == null ? '' : message.createdWhen}"></span>
+                <p th:text="${message.textMessage}"></p>
+            </div>
+-->
+            <div th:each="message: ${currentPage}">
 
                 <span th:text="${message.user == null ? '' : message.user.name}"></span>
                 <span> wrote at </span>
@@ -37,6 +45,11 @@
                 <p th:text="${message.textMessage}"></p>
             </div>
 
+            <nav aria-label="Page navigation example">
+                <ul th:each="i : ${#numbers.sequence( 0, (currentPage.totalPages==0)? 0: currentPage.totalPages-1)}" class="pagination" >
+                    <li th:class="${currentPage.number eq i}?'page-item active':'page-item'"><a class="page-link" th:href="@{/topic(id=${currentTopic.id}, page=${i}, size=${currentPage.size})}" th:text="${i+1}"></a></li>
+                </ul>
+            </nav>
 
             <form action="#" th:action="@{/addMessage}" th:object="${messageForm}" method="post">
 
