@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 @Component
 public class TopicForm {
     @NotNull
-    @Size(min = 2, max = 50)
+    @Size(min = 2, max = 250)
     private String description;
 
     public String getDescription() {

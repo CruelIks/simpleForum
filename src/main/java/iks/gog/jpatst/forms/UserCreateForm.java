@@ -8,13 +8,11 @@ import javax.validation.constraints.NotNull;
 
 @Component
 public class UserCreateForm {
-    @NotEmpty
+
     private String name = "";
 
-    @NotEmpty
     private String password = "";
 
-    @NotEmpty
     private String confirmPassword = "";
 
     @NotNull

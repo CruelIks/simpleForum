@@ -1,6 +1,7 @@
 package iks.gog.jpatst.service;
 
 import iks.gog.jpatst.forms.UserCreateForm;
+import iks.gog.jpatst.model.Role;
 import iks.gog.jpatst.model.User;
 import iks.gog.jpatst.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
@@ -45,6 +47,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User create(UserCreateForm form) {
         User user = new User();
         user.setName(form.getName());
@@ -53,7 +56,12 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(form.getPassword()));
 
         user.setRole(form.getRole());
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        if (savedUser.getId() == 1L) {
+            savedUser.setRole(Role.ADMIN);
+        }
+        userRepository.save(savedUser);
+        return savedUser;
     }
 
     @Override

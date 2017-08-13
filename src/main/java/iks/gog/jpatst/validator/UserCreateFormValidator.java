@@ -3,7 +3,6 @@ package iks.gog.jpatst.validator;
 import iks.gog.jpatst.forms.UserCreateForm;
 import iks.gog.jpatst.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -32,18 +31,44 @@ public class UserCreateFormValidator implements Validator {
     public void validate(Object target, Errors errors) {
         UserCreateForm form = (UserCreateForm) target;
         validatePasswords(errors, form);
-        validateEmail(errors, form);
+        validateName(errors, form);
     }
 
     private void validatePasswords(Errors errors, UserCreateForm form) {
-        if (!form.getPassword().equals(form.getConfirmPassword())) {
+        //(?=.*\d.*)(?=.*[!@#$%].*)(?=.*[a-z].*)(?=.*[A-Z].*)^.{8,}$
+        String password = form.getPassword();
+        if (!password.equals(form.getConfirmPassword())) {
             errors.reject("password.no_match", "Passwords do not match");
+        }
+        if (password.trim().length() < 8){
+            errors.reject("password.too_short", "The password must be at least 8 characters");
+        }
+
+        if (!password.matches(".*[0-9].*")){
+            errors.reject("password.no_number", "The password must contain at least 1 number");
+        }
+
+        if (!password.matches(".*[a-z].*")){
+            errors.reject("password.no_lowercase", "The password must contain at least 1 lowercase letter");
+        }
+
+        if (!password.matches(".*[A-Z].*")){
+            errors.reject("password.no_uppercase", "The password must contain at least 1 uppercase letter");
+        }
+
+        if (!password.matches(".*[!@#$%].*")){
+            errors.reject("password.no_uppercase", "The password must contain at least 1 [!@#$%] letter");
         }
     }
 
-    private void validateEmail(Errors errors, UserCreateForm form) {
+    private void validateName(Errors errors, UserCreateForm form) {
+
+        if (form.getName().isEmpty()){
+            errors.reject("name.empty", "Empty name");
+        }
+
         if (userService.findByName(form.getName()) != null) {
-            errors.reject("email.exists", "User with this name already exists");
+            errors.reject("name.exists", "User with this name already exists");
         }
     }
 }

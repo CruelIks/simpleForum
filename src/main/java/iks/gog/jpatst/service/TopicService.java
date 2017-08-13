@@ -2,6 +2,7 @@ package iks.gog.jpatst.service;
 
 import iks.gog.jpatst.forms.TopicForm;
 import iks.gog.jpatst.model.Message;
+import iks.gog.jpatst.model.Role;
 import iks.gog.jpatst.model.Topic;
 import iks.gog.jpatst.repository.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,16 @@ public class TopicService {
 
         PageRequest request = new PageRequest(page, size, sort);
         return topicRepository.findAll(request);
+    }
+
+    public void deleteTopic(Long topicId){
+        Topic topic = topicRepository.findOne(topicId);
+
+        if (topic == null || userService.getCurrentUser().getRole() != Role.ADMIN){
+            return;
+        }
+
+        topicRepository.delete(topic);
     }
 
 }

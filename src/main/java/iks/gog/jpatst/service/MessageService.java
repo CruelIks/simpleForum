@@ -2,6 +2,7 @@ package iks.gog.jpatst.service;
 
 import iks.gog.jpatst.forms.MessageForm;
 import iks.gog.jpatst.model.Message;
+import iks.gog.jpatst.model.Role;
 import iks.gog.jpatst.model.Topic;
 import iks.gog.jpatst.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class MessageService {
     @Autowired
     private TopicService topicService;
 
-    public void addMessage(MessageForm form){
+    public Message addMessage(MessageForm form){
 
         Message message = new Message();
         message.setTextMessage(form.getDescription());
@@ -34,9 +35,9 @@ public class MessageService {
         message.setUser(userService.getCurrentUser());
 
         topic.setUpdatedWhen(currentDate);
-        messageRepository.save(message);
+        Message newMessage = messageRepository.save(message);
         topicService.saveTopic(topic);
-
+        return newMessage;
     }
 
     public Page<Message> findByTopicId(Long topicId, int page, int size){
@@ -44,6 +45,34 @@ public class MessageService {
 
         PageRequest request = new PageRequest(page, size, sort);
         return messageRepository.findBytopic_id(topicId, request);
+    }
+
+    public void deleteMessage(Long messageId) {
+        Message message = messageRepository.findOne(messageId);
+
+        if (message == null) {
+            return;
+        }
+
+        if (userService.getCurrentUser().getRole() == Role.ADMIN ||
+                userService.getCurrentUser() == message.getUser()) {
+            messageRepository.delete(message);
+        }
+    }
+
+    public Message findMessageById(Long id){
+        return messageRepository.findOne(id);
+    }
+
+    public void deleteMessage(Message message){
+        if (message == null) {
+            return;
+        }
+
+        if (userService.getCurrentUser().getRole() == Role.ADMIN ||
+                userService.getCurrentUser() == message.getUser()) {
+            messageRepository.delete(message);
+        }
     }
 
 }

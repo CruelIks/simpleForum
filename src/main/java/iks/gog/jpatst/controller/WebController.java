@@ -9,8 +9,6 @@ import iks.gog.jpatst.service.TopicService;
 import iks.gog.jpatst.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,18 +37,18 @@ public class WebController extends WebMvcConfigurerAdapter {
         registry.addViewController("/results").setViewName("results");
     }
 
-    @GetMapping("/")
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public String showForum(
             @RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
             @RequestParam(name = "size", defaultValue = "10", required = false) Integer size,
             Model model) {
         model.addAttribute("allTopics", topicService.getTopicsPaged(page, size));
         model.addAttribute("topicForm", topicForm);
-        model.addAttribute("username", userService.getCurrentUser().getName());
+        model.addAttribute("currentUser", userService.getCurrentUser());
         return "forum";
     }
 
-    @GetMapping("/topic")
+    @RequestMapping(value = "/topic", method = RequestMethod.GET)
     public String getTopic(@RequestParam(value = "id", required = true) Long id,
                            @RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
                            @RequestParam(name = "size", defaultValue = "10", required = false) Integer size,
@@ -62,35 +60,55 @@ public class WebController extends WebMvcConfigurerAdapter {
         model.addAttribute("currentPage", currentPage);
         messageForm.setTopicId(id);
         model.addAttribute("messageForm", messageForm);
+        model.addAttribute("currentUser", userService.getCurrentUser());
         return "topic";
     }
 
-    @GetMapping("/addTopic")
+    @RequestMapping(value = "/addTopic", method = RequestMethod.GET)
     public String showForm(TopicForm topicForm) {
         return "addTopic";
     }
 
-    @PostMapping("/addTopic")
+    @RequestMapping(value = "/addTopic", method = RequestMethod.POST)
     public String checkTopicData(@Valid TopicForm topicForm, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return "addTopic";
         }
 
-        topicService.addTopic(topicForm);
+        Topic newTopic = topicService.addTopic(topicForm);
+        return "redirect:/topic?id=" + newTopic.getId();
+    }
+
+    @RequestMapping(value = "/deleteTopic", method = RequestMethod.GET)
+    public String deleteTopic(@RequestParam(value = "id", required = true) Long topicId){
+        topicService.deleteTopic(topicId);
         return "redirect:/";
     }
 
-    @PostMapping("/addMessage")
+    @RequestMapping(value = "/deleteMessage", method = RequestMethod.GET)
+    public String deleteMessage(@RequestParam(value = "id", required = true) Long messageId){
+        Message message = messageService.findMessageById(messageId);
+        Long topicId = message.getTopic().getId();
+
+        messageService.deleteMessage(message);
+        return "redirect:/topic?id=" + topicId;
+    }
+
+    @RequestMapping(value = "/addMessage")
     public String checkMessageData(@Valid MessageForm messageForm, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return "redirect:/";
         }
 
-        messageService.addMessage(messageForm);
+        Message newMessage = messageService.addMessage(messageForm);
 
-        return "redirect:/";
+        if (newMessage == null){
+            return "redirect:/";
+        }
+
+        return "redirect:/topic?id=" + newMessage.getTopic().getId();
     }
 
 

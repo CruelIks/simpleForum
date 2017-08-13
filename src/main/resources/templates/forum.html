@@ -20,7 +20,7 @@
             <li><a data-toggle="modal" href="#myModal">Add topic</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="#" th:text="${username}"></a></li>
+            <li><a href="#" th:text="${currentUser.name}"></a></li>
             <li><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
         </ul>
     </div>
@@ -36,6 +36,7 @@
             <th>User</th>
             <th>Created</th>
             <th>Updated</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -45,14 +46,15 @@
             <td th:text="${topic.user == null ? '' : topic.user.name}"/>
             <td th:text="${#dates.format(topic.createdWhen, 'dd/MMM/yyyy HH:mm')}"></td>
             <td th:text="${#dates.format(topic.updatedWhen, 'dd/MMM/yyyy HH:mm')}"></td>
+            <td><a th:if="${#strings.toString(currentUser.role)=='ADMIN'}" th:href = "@{/deleteTopic(id=${topic.id})}">remove</a></td>
         </tr>
 
         </tbody>
     </table>
 
     <nav aria-label="Page navigation example">
-        <ul th:each="i : ${#numbers.sequence( 1, allTopics.totalPages)}" class="pagination" >
-            <li th:class="${allTopics.number+1 eq i}?'page-item active':'page-item'"><a class="page-link" th:href="@{/(page=${i-1}, size=${allTopics.size})}" th:text="${i}"></a></li>
+        <ul th:each="i : ${#numbers.sequence( 0, (allTopics.totalPages==0)? 0: allTopics.totalPages - 1)}" class="pagination" >
+            <li th:class="${allTopics.number eq i}?'page-item active':'page-item'"><a class="page-link" th:href="@{/(page=${i}, size=${allTopics.size})}" th:text="${i+1}"></a></li>
         </ul>
     </nav>
 

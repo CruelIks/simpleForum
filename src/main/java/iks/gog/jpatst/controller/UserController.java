@@ -43,7 +43,7 @@ public class UserController {
         try {
             userService.create(form);
         } catch (DataIntegrityViolationException e) {
-            bindingResult.reject("email.exists", "Email already exists");
+            bindingResult.reject("name.exists", "Name already exists");
             return "register";
         }
         return "redirect:/";
