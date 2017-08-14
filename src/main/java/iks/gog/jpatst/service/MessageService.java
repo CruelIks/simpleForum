@@ -41,7 +41,7 @@ public class MessageService {
     }
 
     public Page<Message> findByTopicId(Long topicId, int page, int size){
-        Sort sort = new Sort(Sort.Direction.DESC,  "createdWhen");
+        Sort sort = new Sort(Sort.Direction.ASC,  "createdWhen");
 
         PageRequest request = new PageRequest(page, size, sort);
         return messageRepository.findBytopic_id(topicId, request);

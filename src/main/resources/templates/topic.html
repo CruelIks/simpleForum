@@ -47,7 +47,7 @@
                 <div class="form-group">
                     <label for="comment">Add new message: </label>
                     <input type="hidden" th:field="*{topicId}"/>
-                    <textarea th:field="*{description}" class="form-control" rows="5" id="message"></textarea>
+                    <textarea th:field="*{description}" class="form-control" rows="5" id="message" maxlength='250'></textarea>
                     <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error></p>
                     <div class="modal-footer">
                         <!--<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>-->
